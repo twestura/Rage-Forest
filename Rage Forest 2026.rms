@@ -50,8 +50,14 @@
  * The 1v1 version of the map also does not have any predators.
  */
 
+#MKCONSTS
+
 /* Player resource changed by the Portuguese Circumnavigation technology. */
 #const CIRCUMNAVIGATION_RESOURCE 203
+
+/* Placeholder constants. */
+#const PHON 1543
+#const PHONL 1544
 
 /* Malay Harbors, used for disabling re-garrisoning of Fishing Ships. */
 #const HARBOR 1189
@@ -70,12 +76,16 @@
 #const BUSH_A 302
 #const FALLEN_LEAVES_AUTUMN 2031
 
+/* Additional terrain and object constants for the 2v2 map. */
+#const ROAD_SNOW 38
+#const ROAD_FUNGUS 39
+
 /* Detects which type of game settings are used. */
-if 2_TEAM_GAME
-  if 2_PLAYER_GAME
-    if TINY_MAP
-      #define STANDARD_1V1
-    endif
+if 2_PLAYER_GAME
+  if TINY_MAP
+    #define STANDARD_1V1
+  endif
+elseif 2_TEAM_GAME
   elseif 4_PLAYER_GAME
     if MEDIUM_MAP
       #define STANDARD_2V2
@@ -648,8 +658,313 @@ elseif PREDATOR_B_BLACK_PANTHER
   #const PREDATOR_B_RUNNING BLACK_PANTHER_RUNNING
 endif
 
+/* Defines constants for each theme. */
+if STANDARD_1V1
+  if AFRICAN_THEME
+    #const BASE_FOREST DLC_DRAGONFOREST
+    #const SECONDARY_FOREST PALM_DESERT
+    #const BORDER_FOREST FOREST_OAK_BUSH
+    #const BASE1 ROAD
+    #const BASE2 ROAD2
+    #const BASE_TERRAIN DLC_SAVANNAH
+    #const MIDDLE_PLACEHOLDER GRASS2
+    #const POCKET_TERRAIN DLC_DIRT4
+    #const POCKET_MASK DLC_SAVANNAH
+    #const CONNECTION_TERRAIN DLC_DIRT4
+    #const PATCH_TERRAIN DLC_DIRT4
+    #const MASK1 DIRT3
+    #const MASK2 GRASS3
+    #const MASK3 DESERT
+    #const BEACH_TERRAIN BEACH
+
+    #const BERRIES DLC_ORANGEBUSH
+    #const HERDABLE_A DLC_GOAT
+    #const HERDABLE_B DLC_GOAT
+    #const STRAGGLER PALMTREE
+    #const HUNT GAZELLE
+    #const LURE DLC_ELEPHANT
+    #const LURE_FAR DLC_RHINO
+    #const BIRD DLC_STORK
+  elseif AUTUMN_THEME
+    #const BASE_FOREST MEDITERRANEAN_FOREST
+    #const SECONDARY_FOREST DLC_FORESTAUTUMN
+    #const BORDER_FOREST FOREST_OAK_BUSH
+    #const BASE1 ROAD
+    #const BASE2 ROAD2
+    #const BASE_TERRAIN GRASS
+    #const MIDDLE_PLACEHOLDER GRASS2
+    #const POCKET_TERRAIN UNDERBRUSH_LEAVES
+    #const POCKET_MASK GRASS3
+    #const CONNECTION_TERRAIN UNDERBRUSH_LEAVES
+    #const PATCH_TERRAIN LEAVES
+    #const MASK1 GRASS2
+    #const MASK2 DLC_DRYGRASS
+    #const MASK3 MUD
+    #const BEACH_TERRAIN DLC_BEACH3
+
+    #const BERRIES FORAGE
+    #const HERDABLE_A DLC_PIG
+    #const HERDABLE_B SHEEP
+    #const STRAGGLER PEACH_BLOSSOM_TREE
+    #const HUNT DLC_IBEX
+    #const LURE BOAR
+    #const LURE_FAR BOAR
+    #const BIRD HAWK
+  elseif GRASS_THEME
+    #const BASE_FOREST FOREST
+    #const SECONDARY_FOREST PINE_FOREST
+    #const BORDER_FOREST FOREST_OAK_BUSH
+    #const BASE1 ROAD
+    #const BASE2 ROAD2
+    #const BASE_TERRAIN GRASS
+    #const MIDDLE_PLACEHOLDER GRASS2
+    #const POCKET_TERRAIN LEAVES
+    #const POCKET_MASK GRASS3
+    #const CONNECTION_TERRAIN LEAVES
+    #const PATCH_TERRAIN LEAVES
+    #const MASK1 DIRT3
+    #const MASK2 GRASS3
+    #const MASK3 LEAVES
+    #const BEACH_TERRAIN BEACH
+
+    #const BERRIES FORAGE
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B SHEEP
+    #const STRAGGLER OAKTREE
+    #const HUNT DEER
+    #const LURE BOAR
+    #const LURE_FAR BOAR
+    #const BIRD HAWK
+  elseif SNOW_THEME
+    #const BASE_FOREST SNOW_FOREST
+    #const SECONDARY_FOREST DLC_FORESTSNOWAUTUMN
+    #const BORDER_FOREST DLC_FORESTDEAD
+    #const BASE1 ROAD
+    #const BASE2 ROAD2
+    #const BASE_TERRAIN SNOW
+    #const MIDDLE_PLACEHOLDER GRASS2
+    #const POCKET_TERRAIN UNDERBRUSH_SNOW
+    #const POCKET_MASK GRASS3
+    #const CONNECTION_TERRAIN UNDERBRUSH_SNOW
+    #const PATCH_TERRAIN UNDERBRUSH_SNOW
+    #const MASK1 DIRT3
+    #const MASK2 GRASS3
+    #const MASK3 MUD
+    #const BEACH_TERRAIN ICYSHORE
+
+    #const BERRIES FORAGE
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B DLC_PIG
+    #const STRAGGLER SNOWPINETREE
+    #const HUNT DEER
+    #const LURE BOAR
+    #const LURE_FAR BOAR
+    #const BIRD HAWK
+  endif
+elseif STANDARD_2V2
+  if GRASS_MAP
+    #const BASE_TERRAIN GRASS
+    #const BASE_FOREST FOREST
+    #const MIXING_FOREST PINE_FOREST
+    #const GRASS_PATCH GRASS3
+    #const ROAD_TERRAIN ROAD2
+    #const SHALLOW_TERRAIN SHALLOW
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B DLC_PIG
+    #const HUNTABLE DEER
+    #const LUREABLE BOAR
+    #const PREDATOR WOLF
+    #const STRAGGLER OAKTREE
+    #const BIRD HAWK
+  elseif AUTUMN_MAP
+    #const BASE_TERRAIN GRASS
+    #const BASE_FOREST DLC_FORESTAUTUMN
+    #const MIXING_FOREST BIRCH_FOREST
+    #const GRASS_PATCH GRASS3
+    #const ROAD_TERRAIN ROAD2
+    #const SHALLOW_TERRAIN SHALLOW
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B DLC_GOOSE
+    #const LUREABLE BOAR
+    #const HUNTABLE DLC_IBEX
+    #const PREDATOR DLC_BEAR
+    #const STRAGGLER DLC_AUTUMNTREE
+    #const BIRD HAWK
+  elseif SNOW_AUTUMN_MAP
+    #define MIX_FOREST_SINGLETONS
+    #define MASK_LEAVES
+    #const BASE_TERRAIN SNOW
+    #const BASE_FOREST DLC_FORESTSNOWAUTUMN
+    #const MIXING_FOREST DLC_FORESTAUTUMN
+    #const GRASS_PATCH GRASS_SNOW
+    #const ROAD_TERRAIN ROAD_SNOW
+    #const SHALLOW_TERRAIN ICE
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B DLC_GOOSE
+    #const LUREABLE BOAR
+    #const HUNTABLE DLC_IBEX
+    #const PREDATOR WOLF
+    #const STRAGGLER DLC_AUTUMNSNOWTREE
+    #const BIRD HAWK
+  elseif FROZEN_MAP
+    #define MIX_FOREST_SINGLETONS
+    #define MASK_LEAVES
+    #const BASE_TERRAIN SNOW
+    #const BASE_FOREST SNOW_FOREST
+    #const MIXING_FOREST PINE_FOREST
+    #const GRASS_PATCH GRASS_SNOW
+    #const ROAD_TERRAIN ROAD_SNOW
+    #const SHALLOW_TERRAIN ICE
+    #const HERDABLE_A SHEEP
+    #const HERDABLE_B DLC_PIG
+    #const LUREABLE BOAR
+    #const HUNTABLE DEER
+    #const PREDATOR WOLF
+    #const STRAGGLER SNOWPINETREE
+    #const BIRD HAWK
+  elseif JUNGLE_MAP
+    #const BASE_TERRAIN GRASS
+    #const BASE_FOREST JUNGLE
+    #const MIXING_FOREST JUNGLE
+    #const GRASS_PATCH GRASS3
+    #const ROAD_TERRAIN ROAD_FUNGUS
+    #const SHALLOW_TERRAIN SHALLOW
+    #const HERDABLE_A TURKEY
+    #const HERDABLE_B DLC_LLAMA
+    #const LUREABLE JAVELINA
+    #const HUNTABLE DEER
+    #const PREDATOR JAGUAR
+    #const STRAGGLER JUNGLETREE
+    #const BIRD MACAW
+  endif
+else
+  /*
+   * This theme selects randomly between `PALM_DESERT` and `DLC_DRAGONTREE` trees.
+   * It does not define a label when creating them. To choose an alternative
+   * forest for the middle, we fix the `WOODIES` constant at `48` and use
+   * `PALM_DESERT` for the middle.
+   */
+  if PH_AFRICAN_E
+    /* RF2026: Use the constant. */
+    #const WOODIES DLC_DRAGONFOREST
+  endif
+  #include_drs F_seasons.inc
+  /*
+  * Add a terrain for the middle blocking forest and a pair of trees to upgrade
+  * it so that it blends in with the `WOODIES` terrain.
+  * RF2026: Update the numbers to their constants.
+  */
+  if PH_SPRING
+    #const BLOCKING_MIDDLE_FOREST PINE_FOREST
+    #const UPGRADE_TREE_SOURCE PINETREE
+    #const UPGRADE_TREE_TARGET FOREST_TREE
+  elseif PH_ALPINE
+    #const BLOCKING_MIDDLE_FOREST FOREST
+    #const UPGRADE_TREE_SOURCE FOREST_TREE
+    #const UPGRADE_TREE_TARGET PINETREE
+  elseif PH_TROPHICALSOUTH
+    #const BLOCKING_MIDDLE_FOREST JUNGLE
+    #const UPGRADE_TREE_SOURCE JUNGLETREE
+    #const UPGRADE_TREE_TARGET DLC_RAINTREE
+  elseif PH_TROPHICALEAST
+    #const BLOCKING_MIDDLE_FOREST JUNGLE
+    #const UPGRADE_TREE_SOURCE JUNGLETREE
+    #const UPGRADE_TREE_TARGET DLC_RAINTREE
+  elseif PH_AUTUMN
+    if PH_MUDDYAUTUMN
+      #const BLOCKING_MIDDLE_FOREST DLC_FORESTAUTUMN
+      #const UPGRADE_TREE_SOURCE DLC_AUTUMNTREE
+      #const UPGRADE_TREE_TARGET BIRCH_TREE
+    else
+      #const BLOCKING_MIDDLE_FOREST BIRCH_FOREST
+      #const UPGRADE_TREE_SOURCE BIRCH_TREE
+      #const UPGRADE_TREE_TARGET DLC_AUTUMNTREE
+    endif
+  elseif PH_FROZEN
+    #const BLOCKING_MIDDLE_FOREST DLC_FORESTSNOWAUTUMN
+    #const UPGRADE_TREE_SOURCE DLC_AUTUMNSNOWTREE
+    #const UPGRADE_TREE_TARGET SNOWPINETREE
+  elseif PH_AFRICAN_E
+    #const BLOCKING_MIDDLE_FOREST PALM_DESERT
+    #const UPGRADE_TREE_SOURCE PALMTREE
+    #const UPGRADE_TREE_TARGET DLC_DRAGONTREE
+  elseif PH_TROPHICALSOUTH_B
+    #const BLOCKING_MIDDLE_FOREST JUNGLE
+    #const UPGRADE_TREE_SOURCE JUNGLETREE
+    #const UPGRADE_TREE_TARGET DLC_RAINTREE
+  endif
+endif
+
+/* Constants for standard 1v1s. */
+/* Determines the number of ponds per player. */
+start_random
+  percent_chance 50 #define NO_PONDS_1V1
+  percent_chance 50 #define ONE_POND_1V1
+end_random
+
+/* Chooses the positions of the player ponds. */
+/* #define FRONT_POND */
+/* #define SIDE_POND */
+/* #define BACK_POND */
+start_random
+  percent_chance 60 #define FRONT_POND
+  percent_chance 40 #define SIDE_POND
+end_random
+
+/* Locations of the player lands. */
+#const T1 rnd(0,359)
+#const OFFSET rnd(155,205)
+#const T2 (T1 + OFFSET)
+#const R 28
+#const R_POND 18
+#FOR($i, 1, 3)
+  #TRIG(T$i)
+  #const X$i (R * COS_T$i + 50)
+  #const Y$i (R * SIN_T$i + 50)
+
+  start_random
+    percent_chance 50 #define FLIP_POND$i
+  end_random
+  if FRONT_POND
+    #const POND_OFFSET$i rnd(100,110)
+  elseif SIDE_POND
+    #const POND_OFFSET$i rnd(65,100)
+  elseif BACK_POND
+    #const POND_OFFSET$i rnd(0,65)
+  else
+    #const POND_OFFSET$i rnd(0,359)
+  endif
+  if FLIP_POND$i
+    #const POND_T$i (POND_OFFSET$i * -1 + T$i)
+  elseif
+    #const POND_T$i (POND_OFFSET$i + T$i)
+  endif
+  #TRIG(POND_T$i)
+  #const POND_X$i (R_POND * COS_POND_T$i + X$i)
+  #const POND_Y$i (R_POND * SIN_POND_T$i + Y$i)
+#END_FOR
+
+/* Locations of the connection midpoint. */
+#const T_PERP (T1 + T2 / 2)
+#TRIG(T_PERP)
+
+#const R_PERP_0 rnd(-10,10)
+
+#const X_PERP_0 (R_PERP_0 * COS_T_PERP + 50)
+#const Y_PERP_0 (R_PERP_0 * SIN_T_PERP + 50)
+
+/* TODO constants for other map sizes */
+
 <PLAYER_SETUP>
-random_placement
+if STANDARD_1V1
+  direct_placement
+elseif STANDARD_2V2
+  direct_placement
+else
+  random_placement
+endif
+ai_info_map_type BLACK_FOREST 0 0 0
+behavior_version 2
 
 /* Sets resource 203 to 1, enabling vision of the explored map. */
 effect_amount MOD_RESOURCE CIRCUMNAVIGATION_RESOURCE ATTR_SET 1
@@ -692,18 +1007,791 @@ effect_amount SET_ATTRIBUTE FISHING_SHIP ATTR_GARRISON_FIREPOWER 0
 effect_amount SET_ATTRIBUTE OYSTERING_SHIP ATTR_GARRISON_FIREPOWER 0
 effect_amount SET_ATTRIBUTE WHALING_SHIP ATTR_GARRISON_FIREPOWER 0
 
-/* TODO predators */
+/* Update predator attributes. */
+/* Makes bears have the same size as Wolves */
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_RADIUS_1 PREDATOR_RADIUS
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_RADIUS_2 PREDATOR_RADIUS
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_RADIUS_1 PREDATOR_RADIUS
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_RADIUS_2 PREDATOR_RADIUS
 
-<LAND_GENERATION>
-base_terrain WATER
-create_player_lands {
-  terrain_type GRASS
-  number_of_tiles 0
-  base_size 10
-}
+/* Updates the predator graphics. */
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_NAME_ID PREDATOR_A_NAME_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_ICON_ID PREDATOR_A_ICON_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_DEAD_ID PREDATOR_A_DEAD_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_ATTACK_GRAPHIC PREDATOR_A_ATTACK
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_ATTACK2_GRAPHIC PREDATOR_A_ATTACK2
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_STANDING_GRAPHIC PREDATOR_A_STANDING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_DYING_GRAPHIC PREDATOR_A_DYING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_UNDEAD_GRAPHIC PREDATOR_A_UNDEAD
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_WALKING_GRAPHIC PREDATOR_A_WALKING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_A ATTR_RUNNING_GRAPHIC PREDATOR_A_RUNNING
 
-<OBJECTS_GENERATION>
-create_object TOWN_CENTER {
-  set_place_for_every_player
-  max_distance_to_players 0
-}
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_NAME_ID PREDATOR_B_NAME_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_ICON_ID PREDATOR_B_ICON_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_DEAD_ID PREDATOR_B_DEAD_ID
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_ATTACK_GRAPHIC PREDATOR_B_ATTACK
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_ATTACK2_GRAPHIC PREDATOR_B_ATTACK2
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_STANDING_GRAPHIC PREDATOR_B_STANDING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_DYING_GRAPHIC PREDATOR_B_DYING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_UNDEAD_GRAPHIC PREDATOR_B_UNDEAD
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_WALKING_GRAPHIC PREDATOR_B_WALKING
+effect_amount GAIA_SET_ATTRIBUTE PREDATOR_B ATTR_RUNNING_GRAPHIC PREDATOR_B_RUNNING
+
+if STANDARD_1V1
+  /* Sets Bird LoS to 0. */
+  effect_amount SET_ATTRIBUTE HAWK ATTR_LINE_OF_SIGHT 0
+
+  /* Make scenic autumn leaves avoid the water. */
+  effect_amount GAIA_SET_ATTRIBUTE FALLEN_LEAVES_AUTUMN ATTR_TERRAIN_ID 4
+
+  /* There is a bug with the in-game grid affecting this setting, so it remains off for now. */
+  /* effect_amount MOD _RESOURCE RESOURCE_CIRCUMNAVIGATION ATTR_SET -1 */
+
+  /* Upgrades trees based on the theme. */
+  if AFRICAN_THEME
+    effect_amount GAIA_UPGRADE_UNIT OAKTREE DLC_DEADTREE 0
+    effect_amount GAIA_UPGRADE_UNIT BUSH_A DLC_AFRICANBUSH 0
+  elseif AUTUMN_THEME
+    effect_amount GAIA_UPGRADE_UNIT CYPRESS_TREE ASIAN_MAPLE_AUTUMN_TREE 0
+    effect_amount GAIA_UPGRADE_UNIT ITALIAN_PINETREE PINETREE 0
+    effect_amount GAIA_UPGRADE_UNIT OLIVE_TREE DLC_AUTUMNTREE 0
+    effect_amount GAIA_UPGRADE_UNIT BUSH_A DLC_AFRICANBUSH 0
+  elseif GRASS_THEME
+  elseif SNOW_THEME
+  endif
+
+  <LAND_GENERATION>
+  base_terrain BASE_FOREST
+  enable_waves 0
+
+  #FOR($i, 1, 3)
+    create_land {
+      terrain_type BASE$i
+      land_position X$i Y$i
+      assign_to AT_TEAM -10 0 0
+      zone $i
+      other_zone_avoidance_distance 8
+      clumping_factor 5
+      land_percent 22
+      base_size 14
+    }
+
+    if ONE_POND_1V1
+      /* Pond */
+      create_land {
+        terrain_type MED_WATER
+        zone $i
+        land_position POND_X$i POND_Y$i
+        number_of_tiles 0
+        base_size 5
+      }
+    endif
+  #END_FOR
+
+  /* Map Middle */
+  create_land {
+    terrain_type MIDDLE_PLACEHOLDER
+    land_position X_PERP_0 Y_PERP_0
+    number_of_tiles 0
+    base_size 1
+    zone 10
+    other_zone_avoidance_distance 0
+    land_id 10
+  }
+
+  <ELEVATION_GENERATION>
+  #FOR($i, 1, 3)
+    create_elevation 2 {
+      base_terrain BASE$i
+      enable_balanced_elevation
+      number_of_tiles 200
+      number_of_clumps 5
+    }
+  #END_FOR
+
+  create_elevation 2 {
+    base_terrain BASE_FOREST
+    enable_balanced_elevation
+    number_of_tiles 2028
+    number_of_clumps 32
+  }
+
+  <TERRAIN_GENERATION>
+  /* Pond generation. */
+  create_terrain WATER {
+    base_terrain MED_WATER
+    set_flat_terrain_only
+    spacing_to_other_terrain_types 1
+    number_of_tiles 50
+    clumping_factor 25
+  }
+
+  create_terrain DEEP_WATER {
+    base_terrain MED_WATER
+    set_flat_terrain_only
+    spacing_to_other_terrain_types 1
+    spacing_to_specific_terrain WATER 16
+    number_of_tiles 50
+    clumping_factor 25
+  }
+
+  #REPEAT(8)
+    create_terrain BASE_TERRAIN {
+      base_terrain MED_WATER
+      land_percent 100
+      number_of_clumps 8192
+      beach_terrain BEACH_TERRAIN
+    }
+    create_terrain WATER {
+      base_terrain DEEP_WATER
+      land_percent 100
+      number_of_clumps 8192
+    }
+  #END_REPEAT
+
+  /* Make forests avoid the ponds. */
+  #REPEAT(8)
+    create_terrain SECONDARY_FOREST {
+      base_terrain BASE_FOREST
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_specific_terrain WATER 5
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain BASE_TERRAIN {
+      base_terrain BASE_FOREST
+      land_percent 100
+      number_of_clumps 8192
+      beach_terrain BEACH_TERRAIN
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain BASE_FOREST {
+      base_terrain SECONDARY_FOREST
+      land_percent 100
+      number_of_clumps 8192
+    }
+  #END_REPEAT
+
+  /* Pockets */
+  create_terrain POCKET_TERRAIN {
+    base_terrain BASE_FOREST
+    number_of_tiles 512
+    number_of_clumps 4
+    spacing_to_other_terrain_types 12
+  }
+
+  /* Covers the placeholder terrain. */
+  #REPEAT(8)
+    #FOR($i, 1, 3)
+      create_terrain BASE_TERRAIN {
+        base_terrain BASE$i
+        land_percent 100
+        number_of_clumps 8192
+        beach_terrain BEACH_TERRAIN
+      }
+    #END_FOR
+  #END_REPEAT
+
+  /* Forest Mixing */
+  #REPEAT(8)
+    create_terrain DLC_BLACK {
+      base_terrain BASE_FOREST
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_other_terrain_types 3
+    }
+  #END_REPEAT
+
+  create_terrain BORDER_FOREST {
+    base_terrain BASE_FOREST
+    number_of_tiles 2028
+    number_of_clumps 32
+  }
+
+  #REPEAT(8)
+    create_terrain BASE_FOREST {
+      base_terrain DLC_BLACK
+      land_percent 100
+      number_of_clumps 8192
+    }
+  #END_REPEAT
+
+  create_terrain SECONDARY_FOREST {
+    base_terrain BASE_FOREST
+    number_of_tiles 2048
+    number_of_clumps 32
+  }
+
+  create_terrain BORDER_FOREST {
+    base_terrain BASE_FOREST
+    number_of_tiles 256
+    number_of_clumps 16
+  }
+
+  /* Water Masking */
+  #REPEAT(8)
+    create_terrain MED_WATER {
+      base_terrain WATER
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_other_terrain_types 2
+      terrain_mask 2
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain MED_WATER {
+      base_terrain WATER
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_other_terrain_types 1
+      terrain_mask 1
+    }
+  #END_REPEAT
+
+  /* Terrain Masking */
+  create_terrain POCKET_MASK {
+    base_terrain POCKET_TERRAIN
+    land_percent 100
+    number_of_clumps 8192
+    terrain_mask 1
+    spacing_to_other_terrain_types 1
+  }
+
+  /* Creates a patch of actual terrain, surrounded by a mask. */
+  create_terrain DLC_BLACK {
+    base_terrain BASE_TERRAIN
+    land_percent 8
+    number_of_clumps 6
+  }
+
+  #REPEAT(8)
+    create_terrain ROAD {
+      base_terrain DLC_BLACK
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_other_terrain_types 1
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain PATCH_TERRAIN {
+      base_terrain DLC_BLACK
+      land_percent 100
+      number_of_clumps 8192
+      spacing_to_specific_terrain BASE_FOREST 1
+      spacing_to_specific_terrain SECONDARY_FOREST 1
+      spacing_to_specific_terrain BORDER_FOREST 1
+      beach_terrain BEACH_TERRAIN
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain BASE_TERRAIN {
+      base_terrain PATCH_TERRAIN
+      land_percent 100
+      number_of_clumps 8192
+      terrain_mask 1
+      beach_terrain BEACH_TERRAIN
+    }
+  #END_REPEAT
+
+  #REPEAT(8)
+    create_terrain PATCH_TERRAIN {
+      base_terrain ROAD
+      land_percent 100
+      number_of_clumps 8192
+      beach_terrain BEACH_TERRAIN
+    }
+    create_terrain PATCH_TERRAIN {
+      base_terrain DLC_BLACK
+      land_percent 100
+      number_of_clumps 8192
+      beach_terrain BEACH_TERRAIN
+    }
+  #END_REPEAT
+
+  create_terrain MASK1 {
+    base_terrain BASE_TERRAIN
+    land_percent 12
+    number_of_clumps 16
+    terrain_mask 1
+    beach_terrain BEACH_TERRAIN
+  }
+
+  create_terrain MASK2 {
+    base_terrain BASE_TERRAIN
+    land_percent 12
+    number_of_clumps 16
+    terrain_mask 1
+    beach_terrain BEACH_TERRAIN
+  }
+
+  create_terrain MASK3 {
+    base_terrain BASE_TERRAIN
+    land_percent 4
+    number_of_clumps 16
+    terrain_mask 1
+    beach_terrain BEACH_TERRAIN
+  }
+
+  /* Theme-specific masking. */
+  if AFRICAN_THEME
+    #REPEAT(8)
+      create_terrain BASE_FOREST {
+        base_terrain SECONDARY_FOREST
+        land_percent 100
+        number_of_clumps 8192
+      }
+      create_terrain DLC_DIRT4 {
+        base_terrain BORDER_FOREST
+        land_percent 100
+        number_of_clumps 8192
+        terrain_mask 1
+      }
+    #END_REPEAT
+    create_terrain BORDER_FOREST {
+      base_terrain BASE_FOREST
+      number_of_tiles 512
+      number_of_clumps 64
+    }
+  elseif AUTUMN_THEME
+    #REPEAT(8)
+      create_terrain BASE_FOREST {
+        base_terrain SECONDARY_FOREST
+        land_percent 100
+        number_of_clumps 8192
+      }
+    #END_REPEAT
+    create_terrain BORDER_FOREST {
+      base_terrain BASE_FOREST
+      number_of_tiles 512
+      number_of_clumps 64
+    }
+  endif
+
+  <CONNECTION_GENERATION>
+  accumulate_connections
+  #FOR($i, 1, 3)
+    create_connect_land_zones $i 10 {
+      replace_terrain BASE_FOREST CONNECTION_TERRAIN
+      replace_terrain SECONDARY_FOREST CONNECTION_TERRAIN
+      replace_terrain BORDER_FOREST CONNECTION_TERRAIN
+      replace_terrain MIDDLE_PLACEHOLDER CONNECTION_TERRAIN
+      replace_terrain BEACH_TERRAIN BEACH_TERRAIN
+
+      terrain_cost BASE_TERRAIN 1
+      terrain_cost BASE_FOREST 2
+      terrain_cost SECONDARY_FOREST 2
+      terrain_cost BORDER_FOREST 2
+      terrain_cost MIDDLE_PLACEHOLDER 1
+      terrain_cost POCKET_TERRAIN 2
+      terrain_cost CONNECTION_TERRAIN 2
+      terrain_cost PATCH_TERRAIN 2
+
+      terrain_size BASE_TERRAIN 5 1
+      terrain_size BASE_FOREST 5 1
+      terrain_size SECONDARY_FOREST 5 1
+      terrain_size BORDER_FOREST 5 1
+      terrain_size POCKET_TERRAIN 5 1
+      terrain_size CONNECTION_TERRAIN 5 1
+      terrain_size PATCH_TERRAIN 5 1
+    }
+  #END_FOR
+
+  <OBJECTS_GENERATION>
+  /* Placeholders */
+  create_object PHON {
+    number_of_objects 14400
+    place_on_specific_land_id 10
+    max_distance_to_players 16
+    set_circular_placement
+    actor_area middle_area_tiny
+    actor_area_radius 0
+  }
+
+  create_object PHON {
+    number_of_objects 14400
+    place_on_specific_land_id 10
+    max_distance_to_players 24
+    set_circular_placement
+    actor_area middle_area_small
+    actor_area_radius 0
+  }
+
+  create_object PHON {
+    number_of_objects 14400
+    place_on_specific_land_id 10
+    max_distance_to_players 32
+    set_circular_placement
+    actor_area middle_area
+    actor_area_radius 0
+  }
+
+  /* Birds */
+  create_object BIRD {
+    number_of_objects 7
+  }
+
+  #TCCENTER
+  #TCBOXES
+  
+  create_object TOWN_CENTER {
+    set_place_for_every_player
+    max_distance_to_players 0
+  }
+
+  create_object VILLAGER {
+    set_place_for_every_player
+    min_distance_to_players 6
+    max_distance_to_players 6
+  }
+
+  create_object STRAGGLER {
+    number_of_objects 2
+    set_place_for_every_player
+    set_gaia_object_only
+    min_distance_to_players 4
+    max_distance_to_players 5
+    temp_min_distance_group_placement 3
+    avoid_forest_zone 2
+  }
+  
+  create_object STRAGGLER {
+    number_of_objects 3
+    set_place_for_every_player
+    set_gaia_object_only
+    min_distance_to_players 6
+    max_distance_to_players 8
+    temp_min_distance_group_placement 5
+    avoid_forest_zone 2
+  }
+
+  /* Captain Fin */
+  #REPEAT(4)
+    create_object SHORE_FISH {
+      number_of_objects 2
+      temp_min_distance_group_placement 16
+      min_distance_group_placement 2
+    }
+  #END_REPEAT
+
+  create_object BERRIES {
+    number_of_objects 6
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    min_distance_to_players 10
+    max_distance_to_players 12
+    max_distance_to_other_zones 7
+    avoid_forest_zone 3
+    min_distance_group_placement 4
+    avoid_actor_area middle_area_tiny
+    avoid_other_land_zones 0
+    actor_area avoid7
+    actor_area_radius 7
+  }
+
+  create_object GOLD {
+    number_of_objects 7
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    min_distance_to_players 12
+    max_distance_to_players 16
+    max_distance_to_other_zones 7
+    avoid_forest_zone 3
+    min_distance_group_placement 4
+    avoid_actor_area middle_area_tiny
+    avoid_other_land_zones 0
+    avoid_actor_area avoid7
+    actor_area avoid7
+    actor_area_radius 7
+  }
+
+  create_object STONE {
+    number_of_objects 5
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    group_placement_radius 2
+    min_distance_to_players 14
+    max_distance_to_players 18
+    max_distance_to_other_zones 7
+    avoid_forest_zone 3
+    min_distance_group_placement 3
+    avoid_actor_area middle_area_tiny
+    avoid_other_land_zones 0
+    avoid_actor_area avoid7
+    actor_area avoid7
+    actor_area_radius 7
+  }
+
+  create_object GOLD {
+    number_of_objects 4
+    number_of_groups 2
+    temp_min_distance_group_placement 12
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    group_placement_radius 2
+    min_distance_to_players 20
+    max_distance_to_players 26
+    max_distance_to_other_zones 6
+    avoid_forest_zone 4
+    min_distance_group_placement 3
+    avoid_actor_area middle_area_small
+    avoid_other_land_zones 0
+    avoid_actor_area avoid7
+    actor_area avoid7
+    actor_area_radius 7
+  }
+
+  create_object STONE {
+    number_of_objects 4
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    group_placement_radius 2
+    min_distance_to_players 20
+    max_distance_to_players 26
+    max_distance_to_other_zones 6
+    avoid_forest_zone 4
+    min_distance_group_placement 3
+    avoid_actor_area middle_area_small
+    avoid_other_land_zones 0
+    avoid_actor_area avoid7
+    actor_area avoid7
+    actor_area_radius 7
+  }
+
+  create_object HUNT {
+    number_of_objects 4
+    set_place_for_every_player
+    set_gaia_object_only
+    set_loose_grouping
+    max_distance_to_other_zones 4
+    avoid_forest_zone 4
+    set_circular_placement
+    min_distance_to_players 16
+    max_distance_to_players 18
+    avoid_other_land_zones 12
+  }
+
+  create_object LURE {
+    number_of_objects 2
+    set_place_for_every_player
+    set_gaia_object_only
+    temp_min_distance_group_placement 6
+    max_distance_to_other_zones 4
+    avoid_forest_zone 4
+    set_circular_placement
+    min_distance_to_players 14
+    max_distance_to_players 20
+    avoid_other_land_zones 12
+  }
+
+  create_object HERDABLE_B {
+    number_of_objects 2
+    set_loose_grouping
+    max_distance_to_other_zones 4
+    avoid_forest_zone 4
+    set_place_for_every_player
+    set_gaia_object_only
+    set_circular_placement
+    min_distance_to_players 18
+    max_distance_to_players 24
+    avoid_other_land_zones 12
+  }
+
+  create_object HERDABLE_A {
+    number_of_objects 4
+    set_place_for_every_player
+    set_loose_grouping
+    min_distance_to_players 7
+    max_distance_to_players 9
+    set_circular_placement
+    set_gaia_object_only
+  }
+
+  create_object SCOUT {
+    set_place_for_every_player
+    set_loose_grouping
+    min_distance_to_players 7
+    max_distance_to_players 9
+    set_circular_placement
+  }
+
+  /* Far Player Resources */
+  create_object GOLD {
+    number_of_objects 3
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    group_placement_radius 1
+    set_circular_placement
+    min_distance_to_players 35
+    find_closest
+    max_distance_to_other_zones 7
+    avoid_forest_zone 2
+    min_distance_group_placement 3
+    avoid_other_land_zones 0
+    avoid_actor_area middle_area
+    actor_area far_gold
+    actor_area_radius 6
+    require_path 0
+    avoid_actor_area avoid7
+  }
+
+  create_object STONE {
+    number_of_objects 2
+    set_place_for_every_player
+    set_gaia_object_only
+    set_tight_grouping
+    group_placement_radius 1
+    set_circular_placement
+    min_distance_to_players 35
+    find_closest
+    max_distance_to_other_zones 7
+    avoid_forest_zone 2
+    min_distance_group_placement 3
+    avoid_other_land_zones 0
+    avoid_actor_area far_gold
+    avoid_actor_area middle_area
+    require_path 0
+    avoid_actor_area avoid7
+    actor_area far_stone
+    actor_area_radius 6
+  }
+
+  /* Far Resource Testing */
+  /* create_object KING {
+    set_place_for_every_player
+    number_of_objects 99999
+    actor_area_to_place_in far_stone
+  } */
+
+  create_object PHONL {
+    set_place_for_every_player
+    set_gaia_object_only
+    min_distance_to_players 32
+    set_circular_placement
+    find_closest
+    avoid_forest_zone 3
+    avoid_other_land_zones 0
+    avoid_actor_area middle_area
+    max_distance_to_other_zones 5
+    require_path 0
+    actor_area boar_area
+    actor_area_radius 3
+  }
+
+  create_object LURE_FAR {
+    number_of_objects 3
+    min_distance_group_placement 1
+    set_gaia_object_only
+    set_place_for_every_player
+    actor_area_to_place_in boar_area
+    avoid_other_land_zones 0
+  }
+
+  /* Boar testing. */
+  /* create_object KING {
+    set_place_for_every_player
+    number_of_objects 9999
+    actor_area_to_place_in boar_area
+  } */
+
+  /* Relics */
+  create_object RELIC {
+    min_distance_group_placement 1
+    place_on_specific_land_id 10
+    avoid_forest_zone 1
+    find_closest
+    min_distance_group_placement 2
+    actor_area middle_relic
+    actor_area_radius 20
+  }
+
+  create_object RELIC {
+    number_of_objects 3
+    set_place_for_every_player
+    set_gaia_object_only
+    set_circular_placement
+    min_distance_to_players 20
+    temp_min_distance_group_placement 18
+    max_distance_to_other_zones 5
+    avoid_forest_zone 2
+    min_distance_group_placement 2
+    avoid_other_land_zones 3
+    avoid_actor_area middle_relic
+    require_path 0
+  }
+
+  /* Map Stragglers */
+  create_object STRAGGLER {
+    number_of_objects 22
+    avoid_forest_zone 2
+    min_distance_to_players 18
+    temp_min_distance_group_placement 4
+    max_distance_to_other_zones 7
+  }
+
+  /* Theme-specific Objects */
+  if AUTUMN_THEME
+    create_object FALLEN_LEAVES_AUTUMN {
+      number_of_objects 16
+      avoid_forest_zone 1
+      max_distance_to_other_zones 7
+      min_distance_to_map_edge 2
+      min_distance_to_players 7
+      min_distance_group_placement 2
+      terrain_to_place_on LEAVES
+    }
+    create_object FALLEN_LEAVES_AUTUMN {
+      number_of_objects 8
+      avoid_forest_zone 1
+      max_distance_to_other_zones 7
+      min_distance_to_map_edge 2
+      min_distance_to_players 7
+      min_distance_group_placement 2
+      layer_to_place_on GRASS2
+    }
+    create_object FALLEN_LEAVES_AUTUMN {
+      number_of_objects 8
+      avoid_forest_zone 1
+      max_distance_to_other_zones 7
+      min_distance_to_map_edge 2
+      min_distance_to_players 7
+      min_distance_group_placement 2
+      layer_to_place_on MUD
+    }
+    create_object FALLEN_LEAVES_AUTUMN {
+      number_of_objects 8
+      avoid_forest_zone 1
+      max_distance_to_other_zones 7
+      min_distance_to_map_edge 2
+      min_distance_to_players 7
+      min_distance_group_placement 2
+      layer_to_place_on DLC_DRYGRASS
+    }
+  endif
+else
+  <LAND_GENERATION>
+  base_terrain WATER
+  create_player_lands {
+    terrain_type GRASS
+    number_of_tiles 0
+    base_size 10
+  }
+
+  <OBJECTS_GENERATION>
+  create_object TOWN_CENTER {
+    set_place_for_every_player
+    max_distance_to_players 0
+  }
+endif
