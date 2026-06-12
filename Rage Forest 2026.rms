@@ -86,7 +86,7 @@ if 2_PLAYER_GAME
     #define STANDARD_1V1
   endif
 elseif 2_TEAM_GAME
-  elseif 4_PLAYER_GAME
+  if 4_PLAYER_GAME
     if MEDIUM_MAP
       #define STANDARD_2V2
     endif
@@ -1439,7 +1439,7 @@ if STANDARD_1V1
 
   #TCCENTER
   #TCBOXES
-  
+
   create_object TOWN_CENTER {
     set_place_for_every_player
     max_distance_to_players 0
@@ -1460,7 +1460,7 @@ if STANDARD_1V1
     temp_min_distance_group_placement 3
     avoid_forest_zone 2
   }
-  
+
   create_object STRAGGLER {
     number_of_objects 3
     set_place_for_every_player
