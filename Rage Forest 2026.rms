@@ -81,7 +81,8 @@
 #const ROAD_FUNGUS 39
 
 /* Detects which type of game settings are used. */
-if 2_PLAYER_GAME
+if EMPIRE_WARS
+elseif 2_PLAYER_GAME
   if TINY_MAP
     #define STANDARD_1V1
   endif
@@ -2533,17 +2534,5 @@ elseif STANDARD_RAGE_FOREST
   }
 
 elseif NONSTANDARD_SETTINGS
-  <LAND_GENERATION>
-  base_terrain WATER
-  create_player_lands {
-    terrain_type GRASS
-    number_of_tiles 0
-    base_size 10
-  }
-
-  <OBJECTS_GENERATION>
-  create_object TOWN_CENTER {
-    set_place_for_every_player
-    max_distance_to_players 0
-  }
+  #include_drs Black_Forest.rms
 endif
