@@ -955,6 +955,88 @@ end_random
 
 /* TODO constants for other map sizes */
 
+/* Constants for 3v3s and 4v4. */
+/* Whether to flip pocket/flank positions. */
+start_random
+  percent_chance 50 #define FLIP1
+end_random
+start_random
+  percent_chance 50 #define FLIP2
+end_random
+
+/* Pond generation proabilities and constants. */
+if 2_PLAYER_GAME
+  start_random
+    percent_chance 50 #const PONDS_PER_TEAM 0 #define NOPONDS
+    percent_chance 50 #const PONDS_PER_TEAM 1
+  end_random
+elseif 4_PLAYER_GAME
+  start_random
+    percent_chance 33 #const PONDS_PER_TEAM 0 #define NOPONDS
+    percent_chance 34 #const PONDS_PER_TEAM 1
+    percent_chance 33 #const PONDS_PER_TEAM 2
+  end_random
+elseif 6_PLAYER_GAME
+  start_random
+    percent_chance 15 #const PONDS_PER_TEAM 0 #define NOPONDS
+    percent_chance 35 #const PONDS_PER_TEAM 1
+    percent_chance 35 #const PONDS_PER_TEAM 2
+    percent_chance 15 #const PONDS_PER_TEAM 3
+  end_random
+elseif 8_PLAYER_GAME
+  start_random
+    percent_chance 10 #const PONDS_PER_TEAM 0 #define NOPONDS
+    percent_chance 20 #const PONDS_PER_TEAM 1
+    percent_chance 40 #const PONDS_PER_TEAM 2
+    percent_chance 20 #const PONDS_PER_TEAM 3
+    percent_chance 10 #const PONDS_PER_TEAM 4
+  end_random
+endif
+#const NUM_POND_TILES (PONDS_PER_TEAM * 25)
+
+/* Number of far Gold and Stone mines. */
+if STANDARD_3V3
+  #const NUM_EXTRA_GOLD_GROUPS 5
+  #const NUM_EXTRA_STONE_GROUPS 5
+elseif STANDARD_4V4
+  #const NUM_EXTRA_GOLD_GROUPS 6
+  #const NUM_EXTRA_STONE_GROUPS 6
+else
+  #const NUM_EXTRA_GOLD_GROUPS 0
+  #const NUM_EXTRA_STONE_GROUPS 0
+endif
+
+/* The number of Boars in each group of extra Boar. */
+start_random
+  percent_chance 25 #const NUM_EXTRA_BOAR 2
+  percent_chance 75 #const NUM_EXTRA_BOAR 3
+end_random
+
+/* Randomizes the distances of per-player predators from players. */
+start_random
+  percent_chance 33
+    #const MIN_PREDATOR_DISTANCE 30
+    #const MAX_PREDATOR_DISTANCE 33
+  percent_chance 33
+    #const MIN_PREDATOR_DISTANCE 34
+    #const MAX_PREDATOR_DISTANCE 37
+  percent_chance 34
+    #const MIN_PREDATOR_DISTANCE 37
+    #const MAX_PREDATOR_DISTANCE 40
+end_random
+
+Determines the number of Relics based on the number of players.
+if STANDARD_3V3
+  #const NUM_RELICS 10
+  #const RELIC_SPACING 45
+elseif STANDARD_4V4
+  #const NUM_RELICS 12
+  #const RELIC_SPACING 52
+else
+  #const NUM_RELICS 0
+  #const RELIC_SPACING 0
+endif
+
 <PLAYER_SETUP>
 if STANDARD_1V1
   direct_placement
@@ -1451,6 +1533,28 @@ if STANDARD_1V1
     max_distance_to_players 6
   }
 
+  if REGICIDE
+    create_object KING {
+      set_place_for_every_player
+      min_distance_to_players 7
+      max_distance_to_players 9
+    }
+    create_object CASTLE {
+      set_place_for_every_player
+      avoid_forest_zone 4
+      max_distance_to_other_zones 5
+      max_distance_to_players 12
+      set_circular_placement
+      find_closest_to_map_center
+    }
+    create_object VILLAGER {
+      number_of_objects 7
+      set_place_for_every_player
+      min_distance_to_players 7
+      max_distance_to_players 9
+    }
+  endif
+
   create_object STRAGGLER {
     number_of_objects 2
     set_place_for_every_player
@@ -1780,7 +1884,655 @@ if STANDARD_1V1
       layer_to_place_on DLC_DRYGRASS
     }
   endif
-else
+elseif STANDARD_2V2
+  /* TODO */
+elseif STANDARD_RAGE_FOREST
+  /* Upgrade trees of the middle blocking forest to blend in. */
+  effect_amount GAIA_UPGRADE_UNIT UPGRADE_TREE_SOURCE UPGRADE_TREE_TARGET 0
+
+  <LAND_GENERATION>
+  base_terrain DESERT
+  enable_waves 0
+
+  /* RF5: Add a land to prevent connections in the very middle. */
+  /* RF2025: Don't spawn this land for 1v1s or 2v2s. */
+  if 2_PLAYER_GAME
+  elseif 4_PLAYER_GAME
+  else
+    create_land {
+      land_position 50 50
+      terrain_type BLOCKING_MIDDLE_FOREST
+      border_fuzziness 5
+      top_border rnd(46,49)
+      right_border rnd(46,49)
+      bottom_border rnd(46,49)
+      left_border rnd(46,49)
+    }
+  endif
+
+  if 2_PLAYER_GAME
+    create_land {
+      terrain_type                  DIRT3
+      land_percent                  12
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_PLAYER 1 0 0
+      zone                          1
+    }
+    create_land {
+      terrain_type                  GRASS3
+      land_percent                  12
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_PLAYER 2 0 0
+      zone                          2
+    }
+  elseif 4_PLAYER_GAME
+    create_land {
+      terrain_type                  DIRT3
+      land_percent                  10
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_TEAM 1 0 0
+      zone                          1
+    }
+    create_land {
+      terrain_type                  DIRT3
+      land_percent                  10
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_TEAM 1 0 0
+      zone                          2
+    }
+    create_land {
+      terrain_type                  GRASS3
+      land_percent                  10
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_TEAM 2 0 0
+      zone                          3
+    }
+    create_land {
+      terrain_type                  GRASS3
+      land_percent                  10
+      base_size                     13
+      other_zone_avoidance_distance 6
+      assign_to                     AT_TEAM 2 0 0
+      zone                          4
+    }
+  elseif 6_PLAYER_GAME
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 1 0 0
+      zone 1
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 1 0 0
+      zone 2
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 1 0 0
+      zone 3
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 2 0 0
+      zone 4
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 2 0 0
+      zone 5
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 8
+      base_size 13
+      other_zone_avoidance_distance 6
+      assign_to AT_TEAM 2 0 0
+      zone 6
+    }
+  elseif 8_PLAYER_GAME
+    /* RF5: Adjust clumping factor to reduce trapped lakes. */
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP1
+          assign_to AT_COLOR 7 0 0
+        else
+          assign_to AT_COLOR 1 0 0
+        endif
+      else
+        assign_to AT_TEAM 1 0 0
+      endif
+      zone 1
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP1
+          assign_to AT_COLOR 5 0 0
+        else
+          assign_to AT_COLOR 3 0 0
+        endif
+      else
+        assign_to AT_TEAM 1 0 0
+      endif
+      zone 2
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP1
+          assign_to AT_COLOR 3 0 0
+        else
+          assign_to AT_COLOR 5 0 0
+        endif
+      else
+        assign_to AT_TEAM 1 0 0
+      endif
+      zone 3
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type DIRT3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP1
+          assign_to AT_COLOR 1 0 0
+        else
+          assign_to AT_COLOR 7 0 0
+        endif
+      else
+        assign_to AT_TEAM 1 0 0
+      endif
+      zone 4
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP2
+          assign_to AT_COLOR 8 0 0
+        else
+          assign_to AT_COLOR 2 0 0
+        endif
+      else
+        assign_to AT_TEAM 2 0 0
+      endif
+      zone 5
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP2
+          assign_to AT_COLOR 6 0 0
+        else
+          assign_to AT_COLOR 4 0 0
+        endif
+      else
+        assign_to AT_TEAM 2 0 0
+      endif
+      zone 6
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP2
+          assign_to AT_COLOR 4 0 0
+        else
+          assign_to AT_COLOR 6 0 0
+        endif
+      else
+        assign_to AT_TEAM 2 0 0
+      endif
+      zone 7
+    }
+    create_land {
+      clumping_factor 15
+      terrain_type GRASS3
+      land_percent 6
+      base_size 13
+      other_zone_avoidance_distance 6
+      if TEAM_POSITIONS
+        if FLIP2
+          assign_to AT_COLOR 2 0 0
+        else
+          assign_to AT_COLOR 8 0 0
+        endif
+      else
+        assign_to AT_TEAM 2 0 0
+      endif
+      zone 8
+    }
+  endif
+
+  <ELEVATION_GENERATION>
+  create_elevation 4 {
+    base_terrain DIRT3
+    number_of_clumps 5
+    number_of_tiles 350
+    set_scale_by_groups
+  }
+
+  create_elevation 4 {
+    base_terrain GRASS3
+    number_of_clumps 5
+    number_of_tiles 350
+    set_scale_by_groups
+  }
+
+  <TERRAIN_GENERATION>
+
+  /* PONDS FOR DA FISHIES */
+  /* RF5: Increase spacing between ponds and woodlines. */
+  /* RF2025: Use constants for the numbers of tiles and clumps. */
+  create_terrain WATER {
+    base_terrain DIRT3
+    if LUDIKRIS_MAP
+      spacing_to_other_terrain_types 2
+      land_percent 1
+      number_of_clumps 20
+    else
+      spacing_to_other_terrain_types 3
+      number_of_tiles NUM_POND_TILES
+      number_of_clumps PONDS_PER_TEAM
+    endif
+    set_avoid_player_start_areas
+    set_flat_terrain_only
+    set_scale_by_size
+  }
+
+  create_terrain WATER {
+    base_terrain GRASS3
+    if LUDIKRIS_MAP
+      spacing_to_other_terrain_types 2
+      land_percent 1
+      number_of_clumps 20
+    else
+      spacing_to_other_terrain_types 3
+      number_of_tiles NUM_POND_TILES
+      number_of_clumps PONDS_PER_TEAM
+    endif
+    set_avoid_player_start_areas
+    set_flat_terrain_only
+    set_scale_by_size
+  }
+
+  /* Replaces the placeholder terrains with the map base and wood terrains. */
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain DIRT3 land_percent 100 number_of_clumps 10000 }
+
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+  create_terrain LAYER_A { base_terrain GRASS3 land_percent 100 number_of_clumps 10000 }
+
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+  create_terrain WOODIES { base_terrain DESERT land_percent 100 number_of_clumps 100 }
+
+  if LUDIKRIS_MAP
+    create_terrain WOODIES {
+      base_terrain LAYER_A
+      spacing_to_other_terrain_types 16
+      land_percent 6
+      number_of_clumps 34
+      set_avoid_player_start_areas
+    }
+  else
+    /* RF5: Increase spacing to ponds, increase avoid player start area. */
+    create_terrain WOODIES {
+      base_terrain LAYER_A
+      spacing_to_other_terrain_types 7
+      land_percent 20
+      number_of_clumps 24
+      set_avoid_player_start_areas 18
+    }
+  endif
+
+  /* RF5: Consider removing to reduce blocked resources and poor passages. */
+  create_terrain LAYER_A {
+    base_terrain WOODIES
+    spacing_to_other_terrain_types 1
+    /* 7 -> 4 */
+    land_percent 4
+    number_of_clumps 9
+    set_avoid_player_start_areas
+  }
+
+  /* Terrain patches. */
+  create_terrain LAYER_B {
+    base_terrain LAYER_A
+    spacing_to_other_terrain_types 1
+    land_percent 3
+    number_of_clumps 26
+  }
+
+  create_terrain LAYER_B {
+    base_terrain LAYER_A
+    spacing_to_other_terrain_types 1
+    land_percent 1
+    number_of_clumps 40
+  }
+
+  create_terrain LAYER_C {
+    base_terrain LAYER_A
+    number_of_clumps 24
+    spacing_to_other_terrain_types 1
+    land_percent 2
+    set_scale_by_size
+  }
+
+  /* RF5: Layer to hide the terrain under the middle blocking forest. */
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+  create_terrain WOODIES { base_terrain BLOCKING_MIDDLE_FOREST land_percent 100 number_of_clumps 4096 terrain_mask 1 }
+
+
+  <CONNECTION_GENERATION>
+  /* RF5: Prevent crossings from passing through the blocking middle terrain. */
+  create_connect_all_players_land {
+    replace_terrain LAYER_A    LAYER_A
+    replace_terrain VODA       MELCINA
+    replace_terrain DEEP_WATER MELCINA
+    replace_terrain WOODIES    LAYER_A
+    replace_terrain BLOCKING_MIDDLE_FOREST LAYER_A
+    terrain_cost    VODA       5
+    terrain_cost    MED_WATER  7
+    terrain_cost    ICE        5
+    terrain_cost    WOODIES    2
+    terrain_cost    LAYER_A    1
+    terrain_cost    LAYER_B    2
+    terrain_cost    BEACH      4
+    terrain_cost BLOCKING_MIDDLE_FOREST 0
+    if LUDIKRIS_MAP
+      terrain_size VODA      3 1
+      terrain_size ICE       3 1
+      terrain_size MED_WATER 3 1
+      terrain_size WOODIES   6 1
+    else
+      terrain_size VODA      2 1
+      terrain_size ICE       2 1
+      terrain_size MED_WATER 2 1
+      terrain_size WOODIES   3 1
+    endif
+  }
+
+  create_connect_teams_lands {
+    replace_terrain LAYER_A   CESTA
+    replace_terrain LAYER_B   CESTA
+    replace_terrain LAYER_C   CESTA
+    replace_terrain WOODIES   CESTA
+    replace_terrain VODA      MELCINA
+    replace_terrain MED_WATER MELCINA
+    replace_terrain BLOCKING_MIDDLE_FOREST CESTA
+    terrain_cost    VODA      0
+    terrain_cost    MED_WATER 0
+    terrain_cost    ICE       0
+    terrain_cost    WOODIES   7
+    terrain_cost    LAYER_A   2
+    terrain_cost    LAYER_B   2
+    terrain_cost    BEACH     0
+    terrain_cost    CESTA     1
+    terrain_cost BLOCKING_MIDDLE_FOREST 0
+    if LUDIKRIS_MAP
+      terrain_size VODA      3 1
+      terrain_size MED_WATER 3 1
+      terrain_size ICE       3 1
+      terrain_size LAYER_A   3 0
+      terrain_size LAYER_B   3 0
+      terrain_size WOODIES   3 0
+      terrain_size CESTA 0 0
+    else
+      terrain_size LAYER_A   1 0
+      terrain_size LAYER_B   1 0
+      terrain_size WOODIES   1 0
+      terrain_size CESTA 0 0
+    endif
+  }
+
+  <OBJECTS_GENERATION>
+  #define GNR_NORMALTC
+  #define GNR_STARTVILLS
+  #define GNR_CLASSICSCOUT
+  #define GNR_RESCLOSE
+  #define GNR_REGICIDECLASSIC
+
+  #define GNR_6KER
+  #define GNR_STARTINGGOLD
+  #define GNR_STARTINGSTONE
+  #define GNR_STARTGOLD744CL
+  #define GNR_STARTSTONE54CL
+
+  #define GNR_GIVEHERD_A
+  #define GNR_HERD4CLASSIC_A
+  #define GNR_GIVEHUNT
+  #define GNR_HUNT3OR4CLASSIC
+  #define GNR_GIVELURES
+  #define GNR_CLASSICLURES
+
+  #define GNR_HOMESTRAGGLE
+  #define GNR_NORMALBIRDS
+  #define GNR_SMALLFISHONLY
+  #define GNR_MAPSTRAGGLE
+  #define GNR_MAP15STRAGGLE
+
+  /* Generating Objects for all of the normal map objects. */
+  #include_drs GeneratingObjects.inc
+
+  /* Generate secondary herdables manually. */
+  create_object HERDABLE_B {
+    number_of_objects 2
+    set_loose_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    avoid_forest_zone 2
+    max_distance_to_other_zones 2
+    min_distance_group_placement 3
+    min_distance_to_players 14
+    max_distance_to_players 20
+    set_circular_placement
+    if PREPARE_FOR_COWS_B
+      #define GNR_COW_B_WAITING
+      actor_area 9999
+      actor_area_radius 6
+    else
+      number_of_groups 2
+      temp_min_distance_group_placement 6
+    endif
+    require_path 0
+  }
+
+  if GNR_COW_B_WAITING
+    create_object HERDABLE_B {
+      set_gaia_object_only
+      set_place_for_every_player
+      avoid_forest_zone 2
+      max_distance_to_other_zones 2
+      min_distance_group_placement 1
+      avoid_actor_area 9999 /* First group of secondary herdables. */
+      min_distance_to_players 14
+      max_distance_to_players 20
+      set_circular_placement
+      require_path 0
+    }
+  endif
+
+  /* RF2025: The number of extra Gold and Stone mines depends on the player count. */
+  create_object GOLD {
+    number_of_objects 3
+    number_of_groups NUM_EXTRA_GOLD_GROUPS
+    set_tight_grouping
+    group_placement_radius 2
+    min_distance_to_players 40
+    temp_min_distance_group_placement 25
+    avoid_forest_zone 3
+    max_distance_to_other_zones 3
+    actor_area 7895
+    actor_area_radius 5
+  }
+
+  create_object STONE {
+    number_of_objects 2
+    number_of_groups NUM_EXTRA_STONE_GROUPS
+    set_tight_grouping
+    group_placement_radius 2
+    min_distance_to_players 40
+    temp_min_distance_group_placement 25
+    avoid_forest_zone 3
+    max_distance_to_other_zones 3
+    avoid_actor_area 7895
+  }
+
+  /* Far Groups of extra Boar. */
+  create_object LURABLE_B {
+    number_of_objects NUM_EXTRA_BOAR
+    set_loose_grouping
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_to_players 35
+    max_distance_to_players 60
+    actor_area 2356
+    actor_area_radius 10
+    avoid_actor_area 2356
+    require_path 0
+  }
+
+  /* Wolf per player. */
+  create_object PREDATOR_A {
+    set_gaia_object_only
+    set_place_for_every_player
+    min_distance_group_placement 12
+    min_distance_to_players MIN_PREDATOR_DISTANCE
+    max_distance_to_players MAX_PREDATOR_DISTANCE
+    avoid_forest_zone 1
+    actor_area 12637
+    actor_area_radius 25
+    avoid_actor_area 12637
+    require_path 0
+  }
+
+  /* Map Wolves */
+  create_object PREDATOR_A {
+    number_of_objects 3
+    set_scaling_to_map_size
+    temp_min_distance_group_placement 25
+    avoid_actor_area 12637
+    set_circular_placement
+    min_distance_to_players 35
+  }
+
+  /* Relics (a few more than normal). */
+  create_object RELIC {
+    number_of_objects NUM_RELICS
+    temp_min_distance_group_placement RELIC_SPACING
+    min_distance_to_players 25
+    set_circular_placement
+    max_distance_to_other_zones 2
+  }
+
+elseif NONSTANDARD_SETTINGS
   <LAND_GENERATION>
   base_terrain WATER
   create_player_lands {
