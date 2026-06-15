@@ -308,12 +308,12 @@ else
   start_random
     percent_chance 10 #define PH_AFRICAN_E
     percent_chance 15 #define PH_SPRING
-    percent_chance 15 #define PH_ALPINE
+    percent_chance 20 #define PH_ALPINE
     percent_chance 10 #define PH_TROPHICALSOUTH
     percent_chance 10 #define PH_TROPHICALEAST
-    percent_chance 10 #define PH_AUTUMN
+    percent_chance 15 #define PH_AUTUMN
     percent_chance 15 #define PH_FROZEN
-    percent_chance 15 #define PH_TROPHICALSOUTH_B
+    percent_chance 5 #define PH_TROPHICALSOUTH_B
   end_random
 endif
 
@@ -848,12 +848,17 @@ else
   if PH_AFRICAN_E
     /* RF2026: Use the constant. */
     #const WOODIES DLC_DRAGONFOREST
+  elseif PH_TROPHICALSOUTH
+    #const LURABLE_A TAPIR
+    #const LURABLE_B TAPIR
+  elseif PH_TROPHICALSOUTH_B
+    #const LURABLE_A TAPIR
+    #const LURABLE_B TAPIR
   endif
   #include_drs F_seasons.inc
   /*
   * Add a terrain for the middle blocking forest and a pair of trees to upgrade
   * it so that it blends in with the `WOODIES` terrain.
-  * RF2026: Update the numbers to their constants.
   */
   if PH_SPRING
     #const BLOCKING_MIDDLE_FOREST PINE_FOREST
@@ -953,6 +958,15 @@ end_random
 
 #const X_PERP_0 (R_PERP_0 * COS_T_PERP + 50)
 #const Y_PERP_0 (R_PERP_0 * SIN_T_PERP + 50)
+
+/* Number of Shore Fish for 1v1s. */
+/* 35% chance for 3, 45% for 4, 20% for 5. */
+start_random
+  percent_chance 45 #define SPAWN_FISH_1V1_4
+  percent_chance 20
+    #define SPAWN_FISH_1V1_4
+    #define SPAWN_FISH_1V1_5
+end_random
 
 /* Constants for 2v2s. */
 start_random
@@ -1059,13 +1073,18 @@ endif
 <PLAYER_SETUP>
 if STANDARD_1V1
   direct_placement
+  behavior_version 2
 elseif STANDARD_2V2
   direct_placement
+  behavior_version 2
+elseif STANDARD_RAGE_FOREST
+  random_placement
+  behavior_version 0
 else
   random_placement
+  behavior_version 2
 endif
 ai_info_map_type BLACK_FOREST 0 0 0
-behavior_version 2
 
 /* Sets resource 203 to 1, enabling vision of the explored map. */
 effect_amount MOD_RESOURCE CIRCUMNAVIGATION_RESOURCE ATTR_SET 1
@@ -1595,13 +1614,29 @@ if STANDARD_1V1
   }
 
   /* Captain Fin */
-  #REPEAT(4)
+  #REPEAT(3)
     create_object SHORE_FISH {
       number_of_objects 2
       temp_min_distance_group_placement 16
       min_distance_group_placement 2
     }
   #END_REPEAT
+
+  if SPAWN_FISH_1V1_4
+    create_object SHORE_FISH {
+      number_of_objects 2
+      temp_min_distance_group_placement 16
+      min_distance_group_placement 1
+    }
+  endif
+
+  if SPAWN_FISH_1V1_5
+    create_object SHORE_FISH {
+      number_of_objects 2
+      temp_min_distance_group_placement 16
+      min_distance_group_placement 1
+    }
+  endif
 
   create_object BERRIES {
     number_of_objects 6
@@ -1720,6 +1755,8 @@ if STANDARD_1V1
 
   create_object HERDABLE_B {
     number_of_objects 2
+    number_of_groups 2
+    temp_min_distance_group_placement 8
     set_loose_grouping
     max_distance_to_other_zones 4
     avoid_forest_zone 4
@@ -1921,7 +1958,7 @@ elseif STANDARD_2V2
     bottom_border 3
     left_border 2
   }
-  
+
   create_land {
     assign_to AT_TEAM 1 0 0
     land_position A2 B2
@@ -1935,7 +1972,7 @@ elseif STANDARD_2V2
     bottom_border 3
     left_border 2
   }
-  
+
   create_land {
     assign_to AT_TEAM 2 0 0
     land_position A3 B3
@@ -2023,7 +2060,7 @@ elseif STANDARD_2V2
       set_avoid_player_start_areas DISTANCE
     }
   endif
-  
+
   #REPEAT(16)
     create_terrain BASE_TERRAIN {
       base_terrain ROAD
@@ -2062,13 +2099,13 @@ elseif STANDARD_2V2
     set_avoid_player_start_areas 17
     spacing_to_other_terrain_types 4
   }
-  
+
   create_terrain BASE_TERRAIN {
     base_terrain BASE_FOREST
     land_percent 7
     number_of_clumps 9
   }
-  
+
   /* Forest Mixing */
   if MIX_FOREST_SINGLETONS
     create_terrain MIXING_FOREST {
@@ -2082,14 +2119,14 @@ elseif STANDARD_2V2
       number_of_clumps 128
       base_terrain BASE_FOREST
     }
-  
+
     create_terrain MIXING_FOREST {
       land_percent 1
       number_of_clumps 256
       base_terrain BASE_FOREST
     }
   endif
-  
+
   /* Terrain Mixing */
   create_terrain LEAVES {
     base_terrain BASE_TERRAIN
@@ -2100,7 +2137,7 @@ elseif STANDARD_2V2
       terrain_mask 2
     endif
   }
-  
+
   create_terrain LEAVES {
     base_terrain BASE_TERRAIN
     spacing_to_other_terrain_types 1
@@ -2110,7 +2147,7 @@ elseif STANDARD_2V2
       terrain_mask 2
     endif
   }
-  
+
   /* Grass Mixing */
   create_terrain GRASS_PATCH {
     base_terrain BASE_TERRAIN
@@ -2118,7 +2155,7 @@ elseif STANDARD_2V2
     number_of_clumps 24
     spacing_to_other_terrain_types 1
   }
-  
+
   /* Water Mixing */
   create_terrain MED_WATER {
     base_terrain WATER
@@ -2130,7 +2167,7 @@ elseif STANDARD_2V2
 
   <CONNECTION_GENERATION>
   accumulate_connections
-  
+
   create_connect_all_players_land {
     replace_terrain BASE_TERRAIN BASE_TERRAIN
     replace_terrain LEAVES LEAVES
@@ -2138,7 +2175,7 @@ elseif STANDARD_2V2
     replace_terrain BASE_FOREST BASE_TERRAIN
     replace_terrain MIXING_FOREST BASE_TERRAIN
     replace_terrain WATER SHALLOW_TERRAIN
-  
+
     terrain_cost BASE_TERRAIN 1
     terrain_cost BASE_FOREST 2
     terrain_cost MIXING_FOREST 2
@@ -2146,7 +2183,7 @@ elseif STANDARD_2V2
     terrain_cost MED_WATER 14
     terrain_cost LEAVES 2
     terrain_cost GRASS_PATCH 1
-    
+
     terrain_size LEAVES 2 0
     terrain_size GRASS_PATCH 2 0
     terrain_size BASE_TERRAIN 2 0
@@ -2155,7 +2192,7 @@ elseif STANDARD_2V2
     terrain_size WATER 2 1
     terrain_size MED_WATER 2 1
   }
-  
+
   create_connect_teams_lands {
     replace_terrain BASE_TERRAIN ROAD_TERRAIN
     replace_terrain LEAVES ROAD_TERRAIN
@@ -2164,7 +2201,7 @@ elseif STANDARD_2V2
     replace_terrain MIXING_FOREST ROAD_TERRAIN
     replace_terrain WATER SHALLOW_TERRAIN
     replace_terrain MED_WATER SHALLOW_TERRAIN
-    
+
     terrain_cost BASE_TERRAIN 2
     terrain_cost BASE_FOREST 7
     terrain_cost MIXING_FOREST 7
@@ -2176,7 +2213,7 @@ elseif STANDARD_2V2
     terrain_cost LEAVES 2
     terrain_cost ROAD_TERRAIN 1
     terrain_cost GRASS_PATCH 2
-    
+
     terrain_size BASE_TERRAIN 1 0
     terrain_size BASE_FOREST 1 0
     terrain_size MIXING_FOREST 1 0
@@ -2196,7 +2233,7 @@ elseif STANDARD_2V2
 
   #TCCENTER
   #TCBOXES
-  
+
   create_object TOWN_CENTER {
     set_place_for_every_player
     max_distance_to_players 0
@@ -2272,7 +2309,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 4
     require_path 0
   }
-  
+
   /* Near Gold */
   create_object GOLD {
     number_of_objects 7
@@ -2294,7 +2331,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 4
     require_path 0
   }
-  
+
   /* Near Stone */
   create_object STONE {
     number_of_objects 5
@@ -2317,7 +2354,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 3
     require_path 0
   }
-  
+
   /* Medium Gold */
   create_object GOLD {
     number_of_objects 4
@@ -2338,7 +2375,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 3
     require_path 0
   }
-  
+
   /* Far Stone */
   create_object STONE {
     number_of_objects 4
@@ -2359,7 +2396,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 3
     require_path 0
   }
-  
+
   /* Far Gold */
   create_object GOLD {
     number_of_objects 4
@@ -2380,7 +2417,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 3
     require_path 0
   }
-  
+
   /* Player food resources. */
   create_object HUNTABLE {
     number_of_objects 4
@@ -2396,7 +2433,7 @@ elseif STANDARD_2V2
     min_distance_group_placement 1
     require_path 0
   }
-  
+
   create_object LUREABLE {
     number_of_objects 2
     set_gaia_object_only
@@ -2410,7 +2447,7 @@ elseif STANDARD_2V2
     temp_min_distance_group_placement 7
     require_path 0
   }
-  
+
   create_object HERDABLE_B {
     number_of_objects 2
     number_of_groups 2
@@ -2426,7 +2463,7 @@ elseif STANDARD_2V2
     temp_min_distance_group_placement 7
     require_path 0
   }
-  
+
   create_object HERDABLE_A {
     number_of_objects 3
     set_loose_grouping
@@ -2436,7 +2473,7 @@ elseif STANDARD_2V2
     set_place_for_every_player
     avoid_forest_zone 1
   }
-  
+
   create_object SCOUT {
     min_distance_to_players 7
     max_distance_to_players 9
@@ -2444,7 +2481,7 @@ elseif STANDARD_2V2
     set_place_for_every_player
     avoid_forest_zone 1
   }
-  
+
   /* Map Gold */
   create_object GOLD {
     number_of_objects 3
@@ -2462,7 +2499,7 @@ elseif STANDARD_2V2
     actor_area map_gold
     actor_area_radius 13
   }
-  
+
   /* Map Stone */
   create_object STONE {
     number_of_objects 3
@@ -2479,7 +2516,7 @@ elseif STANDARD_2V2
     min_distance_to_map_edge 2
     avoid_actor_area map_gold
   }
-  
+
   /* Far Boar/Javelina */
   create_object PHONL {
     set_place_for_every_player
@@ -2495,7 +2532,7 @@ elseif STANDARD_2V2
     require_path 0
     second_object OBJECT
   }
-  
+
   create_object PHON {
     set_place_for_every_player
     set_gaia_object_only
@@ -2503,7 +2540,7 @@ elseif STANDARD_2V2
     actor_area far_hunt_area
     actor_area_radius 3
   }
-  
+
   /* Uses a placeholder to spawn the hunt to ensure all 3 spawn. */
   create_object PHON {
     number_of_objects 3
@@ -2512,14 +2549,14 @@ elseif STANDARD_2V2
     actor_area_to_place_in far_hunt_area
     second_object LUREABLE
   }
-  
+
   create_object PHON {
     set_place_for_every_player
     set_gaia_object_only
     actor_area_to_place_in far_hunt0
     min_distance_group_placement 4
   }
-  
+
   /* Captain Fin */
   /* Shore fish for each pond. */
   create_object SHORE_FISH {
@@ -2527,27 +2564,27 @@ elseif STANDARD_2V2
     place_on_specific_land_id 21
     temp_min_distance_group_placement 1
   }
-  
+
   create_object SHORE_FISH {
     number_of_objects FISH_2
     place_on_specific_land_id 22
     temp_min_distance_group_placement 1
   }
-  
+
   create_object SHORE_FISH {
     number_of_objects FISH_3
     place_on_specific_land_id 23
     temp_min_distance_group_placement 1
   }
-  
+
   create_object SHORE_FISH {
     number_of_objects FISH_4
     place_on_specific_land_id 24
     temp_min_distance_group_placement 1
   }
-  
+
   /* Other Map Objects */
-  
+
   /* Relics */
   create_object RELIC {
     number_of_objects 7
@@ -2557,14 +2594,14 @@ elseif STANDARD_2V2
     avoid_forest_zone 1
     max_distance_to_other_zones 3
     temp_min_distance_group_placement 30
-  
+
     /* Ensures that Relics always are reachable and not in bubbles. */
     require_path 0
     generate_for_first_land_only
     set_place_for_every_player
     set_gaia_object_only
   }
-  
+
   /* Player Predators */
   create_object PREDATOR_A {
     /* number_of_objects 2 */
@@ -2581,7 +2618,7 @@ elseif STANDARD_2V2
     actor_area_radius 15
     avoid_actor_area predator15
   }
-  
+
   /* Map Predators */
   create_object PREDATOR_B {
     number_of_objects 3
@@ -2593,7 +2630,7 @@ elseif STANDARD_2V2
     max_distance_to_other_zones 4
     avoid_actor_area predator15
   }
-  
+
   /* Map Stragglers */
   create_object STRAGGLER {
     number_of_objects 100
